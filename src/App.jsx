@@ -1,18 +1,32 @@
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
-import Login from "./pages/Login";
+
+import LoginPage from "./login-page";
 import Register from "./pages/Register";
 import Products from "./pages/Products";
+import ProductDetails from "./pages/ProductDetails";
 
 function PrivateRoute({ children }) {
-  return localStorage.getItem("access") ? children : <Navigate to="/login" />;
+  return localStorage.getItem("access")
+    ? children
+    : <Navigate to="/login" />;
 }
 
-export default function App() {
+function App() {
   return (
     <BrowserRouter>
+
       <Routes>
-        <Route path="/login" element={<Login />} />
-        <Route path="/register" element={<Register />} />
+
+        <Route
+          path="/login"
+          element={<LoginPage />}
+        />
+
+        <Route
+          path="/register"
+          element={<Register />}
+        />
+
         <Route
           path="/"
           element={
@@ -21,7 +35,20 @@ export default function App() {
             </PrivateRoute>
           }
         />
+
+        <Route
+          path="/products/:id"
+          element={
+            <PrivateRoute>
+              <ProductDetails />
+            </PrivateRoute>
+          }
+        />
+
       </Routes>
+
     </BrowserRouter>
   );
 }
+
+export default App;

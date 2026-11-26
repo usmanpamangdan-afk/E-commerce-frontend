@@ -1,15 +1,20 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useTheme } from "../context/ThemeContext";
 import api from "../api";
 import "../App.css";
 
-const BASE_URL = import.meta.env.VITE_API_URL || " https://0fxbpgxl-8000.inc1.devtunnels.ms";
+const BASE_URL =
+  import.meta.env.VITE_API_URL || "https://0fxbpgxl-8000.inc1.devtunnels.ms";
 
 const imageUrl = (path) =>
   path.startsWith("http") ? path : `${BASE_URL}${path}`;
 
 export default function Products() {
   const navigate = useNavigate();
+
+  const { darkMode, toggleTheme } = useTheme();
+
   const [products, setProducts] = useState([]);
   const [productImages, setProductImages] = useState([]);
   const [message, setMessage] = useState("");
@@ -21,6 +26,7 @@ export default function Products() {
           api.get("/products/"),
           api.get("/product-images/"),
         ]);
+
         setProducts(productRes.data.results ?? productRes.data);
         setProductImages(imageRes.data.results ?? imageRes.data);
       } catch (err) {
@@ -33,12 +39,18 @@ export default function Products() {
         }
       }
     };
+
     loadData();
   }, [navigate]);
 
   const addToCart = async (product) => {
     try {
-      await api.post("/cart-items/", { cart: 4, variant: 3, quantity: 1 });
+      await api.post("/cart-items/", {
+        cart: 4,
+        variant: 3,
+        quantity: 1,
+      });
+
       setMessage(`${product.name} added to cart`);
     } catch (err) {
       console.log(err.response?.data);
@@ -48,8 +60,14 @@ export default function Products() {
 
   return (
     <div>
+      <button onClick={toggleTheme}>
+        {darkMode ? "☀️ Light Mode" : "🌙 Dark Mode"}
+      </button>
+
       <h1>My E-Commerce Store</h1>
+
       <h2>Products</h2>
+
       {message && <p>{message}</p>}
 
       <div className="product-grid">
@@ -59,7 +77,11 @@ export default function Products() {
           );
 
           return (
-            <div className="product-card" key={product.id}>
+            <div
+              className="product-card"
+              key={product.id}
+              onClick={() => navigate(`/products/${product.id}`)}
+            >
               {image ? (
                 <img
                   src={imageUrl(image.image)}
@@ -67,12 +89,25 @@ export default function Products() {
                   className="product-image"
                 />
               ) : (
-                <div className="product-image">No Image</div>
+                <div className="product-image">
+                  No Image
+                </div>
               )}
 
               <h3>{product.name}</h3>
-              <p className="price">₹{product.price}</p>
-              <button onClick={() => addToCart(product)}>Add to Cart</button>
+
+              <p className="price">
+                ₹{product.price}
+              </p>
+
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  addToCart(product);
+                }}
+              >
+                Add to Cart
+              </button>
             </div>
           );
         })}

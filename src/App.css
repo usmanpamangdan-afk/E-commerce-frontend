@@ -22,8 +22,9 @@
 }
 
 .price {
-  font-size: 20px;
-  font-weight: bold;
+  font-family: "Poppins", cursive;
+  font-weight: 400;
+  font-style: normal;
 }
 
 .product-card button {
@@ -31,4 +32,94 @@
   border: none;
   border-radius: 5px;
   cursor: pointer;
+}
+
+.card-div{
+  color: white;
+  background-color:beige ;
+  border-radius: 16px;
+}
+
+.header-head{
+  color: aquamarine;
+
+}
+
+
+
+
+
+
+.products {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+}
+
+   
+.lap-image {
+  width: 300px;
+  padding: 20px;
+  border: 1px solid black;
+}
+
+.lap-image h2 {
+  font-size: 24px;
+}
+
+.lap-image p {
+  color: green;
+}
+
+.lap-image button  {
+  padding: 10px;
+}
+
+
+.LAP{
+  height: 200px;
+  width: 200px;
+}
+
+  
+.phone-image {
+  width: 300px;
+  padding: 20px;
+  border: 1px solid black;
+}
+
+.phone-image h2 {
+  font-size: 24px;
+}
+
+.phone-image p {
+  color: green;
+}
+
+.phone-image button  {
+  padding: 10px;
+}
+
+
+.PHONE{
+  height: 200px;
+  width: 200px;
+}
+
+body.dark-theme .product-card {
+  background-color: #1f2937;
+  color: white;
+}
+
+body.dark-theme .product-card h3 {
+  color: white;
+}
+
+body.dark-theme .product-card .price {
+  color: white;
+}
+
+body.light-theme .product-card {
+  background-color: white;
+  color: black;
 }
