@@ -1,10 +1,12 @@
+
 import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import api from "../api";
 import "./ProductDetails.css";
 
 const BASE_URL =
-  import.meta.env.VITE_API_URL || "https://0fxbpgxl-8000.inc1.devtunnels.ms";
+  import.meta.env.VITE_API_URL ||
+  "https://0fxbpgxl-8000.inc1.devtunnels.ms";
 
 const imageUrl = (path) =>
   path.startsWith("http") ? path : `${BASE_URL}${path}`;
@@ -15,19 +17,30 @@ export default function ProductDetails() {
 
   const [product, setProduct] = useState(null);
   const [image, setImage] = useState(null);
+  const [variant, setVariant] = useState(null);
+  const [cart, setCart] = useState(null);
   const [loading, setLoading] = useState(true);
   const [quantity, setQuantity] = useState(1);
 
   useEffect(() => {
     const loadProduct = async () => {
       try {
-        const [productResponse, imageResponse] = await Promise.all([
+        const [
+          productResponse,
+          imageResponse,
+          variantResponse,
+          cartResponse,
+        ] = await Promise.all([
           api.get(`/products/${id}/`),
           api.get("/product-images/"),
+          api.get("/product-variants/"),
+          api.get("/carts/"),
         ]);
 
+        // Product
         setProduct(productResponse.data);
 
+        // Image
         const images =
           imageResponse.data.results ?? imageResponse.data;
 
@@ -36,6 +49,30 @@ export default function ProductDetails() {
         );
 
         setImage(productImage);
+
+        // Variant
+        const variants =
+          variantResponse.data.results ?? variantResponse.data;
+
+        const productVariant = variants.find(
+          (item) => item.product === Number(id)
+        );
+
+        setVariant(productVariant);
+
+        // Cart
+
+        const carts =
+  cartResponse.data.results ?? cartResponse.data;
+
+  console.log("CARTS FROM FRONTEND:", carts);
+
+if (Array.isArray(carts) && carts.length > 0) {
+  setCart(carts[0]);
+} else {
+  console.log("No cart found:", cartResponse.data);
+}
+
       } catch (error) {
         console.log("Error:", error.response?.data);
       } finally {
@@ -45,6 +82,31 @@ export default function ProductDetails() {
 
     loadProduct();
   }, [id]);
+
+  const handleAddToCart = async () => {
+    if (!cart) {
+      alert("Cart not found.");
+      return;
+    }
+
+    if (!variant) {
+      alert("This product has no variant available.");
+      return;
+    }
+
+    try {
+      await api.post("/cart-items/", {
+        cart: cart.id,
+        variant: variant.id,
+        quantity: quantity,
+      });
+
+      alert("Product added to cart!");
+    } catch (error) {
+      console.log("Cart Error:", error.response?.data);
+      alert(JSON.stringify(error.response?.data));
+    }
+  };
 
   if (loading) {
     return (
@@ -61,21 +123,6 @@ export default function ProductDetails() {
       </div>
     );
   }
-
-  const handleAddToCart = async () => {
-  try {
-    await api.post("/cart-items/", {
-      cart: 4,
-      variant: 3,
-      quantity: quantity,
-    });
-
-    alert("Product added to cart!");
-  } catch (error) {
-  console.log("Cart Error:", error.response?.data);
-  alert(JSON.stringify(error.response?.data));
-}
-};
 
   return (
     <div className="product-details-page">
@@ -125,19 +172,23 @@ export default function ProductDetails() {
             </p>
           </div>
 
+          {/* QUANTITY */}
           <div className="quantity-section">
             <label>Quantity</label>
 
-            
-             <input
-            type="number"
-            min="1"
-            value={quantity}
-            onChange={(e) => setQuantity(Number(e.target.value))}
-/>
+            <input
+              type="number"
+              min="1"
+              value={quantity}
+              onChange={(e) =>
+                setQuantity(Number(e.target.value))
+              }
+            />
           </div>
 
-          <button className="add-cart-button "
+          {/* ADD TO CART */}
+          <button
+            className="add-cart-button"
             onClick={handleAddToCart}
           >
             Add to Cart

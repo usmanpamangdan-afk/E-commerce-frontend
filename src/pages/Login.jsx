@@ -49,6 +49,7 @@ export default function Login() {
 
       <div className="login-animation">
   <DotLottieReact
+  
     src="/Login.lottie"
     autoplay
     loop

@@ -31,7 +31,13 @@ function LoginPage() {
   return (
     <div
       className="min-h-screen flex items-center justify-center p-8 bg-cover bg-center bg-no-repeat"
-      style={{ backgroundImage: `url(${loginBg})` }}
+      style={
+        
+        
+        { backgroundImage: `url(${loginBg})` }
+        
+    
+    }
     >
       <div className="w-[900px] min-h-[550px] flex flex-col md:flex-row overflow-hidden rounded-2xl shadow-2xl">
 

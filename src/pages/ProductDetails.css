@@ -3,7 +3,26 @@
   background-color: #f3f4f6;
   padding: 32px;
 }
+ 
+.products-page{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 20px;
+  padding: 15px 0;
+}
+.products-page h1 {
+  font-size: 32px;
+  font-weight: 700;
+  margin: 0;
+}
 
+.products-page h2 {
+  font-size: 18px;
+  font-weight: 500;
+  margin: 0;
+}
 .product-loading {
   min-height: 100vh;
   display: flex;
@@ -136,5 +155,24 @@
 }
 
 .add-cart-button:hover {
+  background-color: #1d4ed8;
+}
+
+.theme {
+  position: fixed;
+  bottom: 20px;
+  right: 24px;
+  z-index: 100;
+  padding: 3px 10px;
+  border: 2px solid white;
+  border-radius: 800px;
+  background-color: #2563eb;
+  color: white;
+  font-size: 16px;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+}
+
+.theme:hover {
   background-color: #1d4ed8;
 }

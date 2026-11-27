@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useTheme } from "../context/ThemeContext";
 import api from "../api";
-import "../App.css";
+import "./Products.css";
 
 const BASE_URL =
   import.meta.env.VITE_API_URL || "https://0fxbpgxl-8000.inc1.devtunnels.ms";
@@ -17,7 +17,7 @@ export default function Products() {
 
   const [products, setProducts] = useState([]);
   const [productImages, setProductImages] = useState([]);
-  const [message, setMessage] = useState("");
+  const [, setMessage] = useState("");
 
   useEffect(() => {
     const loadData = async () => {
@@ -46,7 +46,7 @@ export default function Products() {
   const addToCart = async (product) => {
     try {
       await api.post("/cart-items/", {
-        cart: 4,
+        cart: 3,
         variant: 3,
         quantity: 1,
       });
@@ -60,18 +60,60 @@ export default function Products() {
 
   return (
     <div>
-      <button onClick={toggleTheme}>
+
+      {/* HEADER */}
+      <header className="store-header">
+
+        <div className="store-logo">
+          🛒 My Store
+        </div>
+
+        <div className="search-box">
+          <span className="search-icon">🔍</span>
+
+          <input
+            type="text"
+            placeholder="Search products..."
+          />
+        </div>
+
+        <div className="header-actions">
+
+          <button className="wishlist-button">
+            ♡ Wishlist
+          </button>
+
+          <button className="cart-button">
+            🛒 Cart
+          </button>
+
+          <button className="account-button">
+            👤 Account
+          </button>
+
+        </div>
+
+      </header>
+
+      {/* THEME BUTTON */}
+      <button className="theme" onClick={toggleTheme}>
         {darkMode ? "☀️ Light Mode" : "🌙 Dark Mode"}
       </button>
 
-      <h1>My E-Commerce Store</h1>
+      {/* PAGE TITLE */}
+      <div className="products-page">
 
-      <h2>Products</h2>
+        <h1>E-Commerce Store</h1>
 
-      {message && <p>{message}</p>}
+        <h2>Products</h2>
 
+      </div>
+
+      {/* PRODUCTS */}
       <div className="product-grid">
+
         {products.map((product) => {
+
           const image = productImages.find(
             (item) => item.product === product.id
           );
@@ -82,6 +124,7 @@ export default function Products() {
               key={product.id}
               onClick={() => navigate(`/products/${product.id}`)}
             >
+
               {image ? (
                 <img
                   src={imageUrl(image.image)}
@@ -108,10 +151,13 @@ export default function Products() {
               >
                 Add to Cart
               </button>
+
             </div>
           );
         })}
+
       </div>
+
     </div>
   );
 }
